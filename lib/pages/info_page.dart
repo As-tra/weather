@@ -21,15 +21,19 @@ class _MeteoState extends State<Meteo> {
         ),
         backgroundColor: Colors.blue,
       ),
-      body: Column(
-        children: [
-          Text('Location: ${widget.data['location']['name']}'),
-          Text('Temputure: ${widget.data['current']['temp_c']}°C'),
-          Text('condition: ${widget.data['current']['condition']['text']}'),
-          Image(
-              image: NetworkImage(
-                  widget.data['current']['condition']['icon'].substring(2)))
-        ],
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text('Location: ${widget.data['location']['name']}'),
+            Text('Temputure: ${widget.data['current']['temp_c']}°C'),
+            Text('condition: ${widget.data['current']['condition']['text']}'),
+            Image(
+                image: NetworkImage(
+              'https://${widget.data['current']['condition']['icon'].substring(2)}',
+            ))
+          ],
+        ),
       ),
     );
   }
