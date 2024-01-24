@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:weather_app/pages/info_page.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+
+import 'package:weather_app/pages/search_page.dart';
 
 class WeatherApp extends StatelessWidget {
   final textController = TextEditingController();
@@ -22,6 +23,19 @@ class WeatherApp extends StatelessWidget {
             color: Colors.white,
           ),
         ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => SearchPage(),
+                ),
+              );
+            },
+            icon: Icon(Icons.search),
+          ),
+        ],
         backgroundColor: Colors.blue,
       ),
       body: Padding(
@@ -42,29 +56,6 @@ class WeatherApp extends StatelessWidget {
                   fontSize: 25,
                 ),
               ),
-              TextField(
-                controller: textController,
-                decoration: InputDecoration(
-                    suffixIcon: IconButton(
-                      icon: Icon(Icons.search),
-                      onPressed: () async {
-                        var response = await getWeather(textController.text);
-                        if (response.statusCode == 200) {
-                          data = json.decode(response.body);
-                        }
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Meteo(
-                              data: data,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                    border: OutlineInputBorder(),
-                    hintText: 'Ya sa7bi Het Plasa makber rasek'),
-              )
             ],
           ),
         ),
