@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class SearchPage extends StatelessWidget {
-  const SearchPage({super.key});
+  String? cityName;
 
   @override
   Widget build(BuildContext context) {
@@ -16,17 +16,19 @@ class SearchPage extends StatelessWidget {
         backgroundColor: Colors.blue,
       ),
       body: Center(
-        child: TextField(
-          decoration: InputDecoration(
-            label: Text('Search'),
-            border: OutlineInputBorder(),
-            hintText: 'Enter a city please',
-            suffix: IconButton(
-              icon: Icon(Icons.search),
-              onPressed: () {
-                
-              },
-            ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: TextField(
+            onSubmitted: (value) {
+              cityName = value;
+            },
+            decoration: InputDecoration(
+                fillColor: Colors.grey[200],
+                filled: true,
+                label: const Text('Search'),
+                border: const OutlineInputBorder(),
+                hintText: 'Enter a city please',
+                suffixIcon: Icon(Icons.search)),
           ),
         ),
       ),
