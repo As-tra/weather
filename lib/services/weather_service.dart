@@ -1,9 +1,15 @@
+import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class WeatherService {
+  String baseUrl = 'https://api.weatherapi.com/v1/';
+  String apiKey = '79df5cfa03cf4041924180055242301';
+
   void getWeather({required cityName}) async {
-    // you reach video 14
-    http.Response response = await http.get(Uri.parse(
-        'http://api.weatherapi.com/v1/current.json?key=79df5cfa03cf4041924180055242301&q=London&aqi=no'));
+    String url =
+        '${baseUrl}forecast.json?key=$apiKey&q=$cityName&days=1&aqi=no&alerts=no';
+    http.Response response = await http.get(Uri.parse(url));
+
+    Map<String, dynamic> data = jsonDecode(response.body);
   }
 }
