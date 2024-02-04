@@ -1,26 +1,29 @@
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
+
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
-
+import 'package:provider/provider.dart';
+import 'package:weather_app/models/weather_model.dart';
 import 'package:weather_app/pages/search_page.dart';
+import 'package:weather_app/providers/weather_prodider.dart';
 
-class WeatherApp extends StatelessWidget {
-  final textController = TextEditingController();
-  var data;
-  Future<http.Response> getWeather(String location) {
-    return http.get(Uri.parse(
-        'https://api.weatherapi.com/v1/current.json?key=79df5cfa03cf4041924180055242301&q=$location'));
-  }
+class WeatherApp extends StatefulWidget {
+  @override
+  State<WeatherApp> createState() => _WeatherAppState();
+}
 
+class _WeatherAppState extends State<WeatherApp> {
+  WeatherModel? weatherData;
   @override
   Widget build(BuildContext context) {
+    weatherData = Provider.of<WeatherProvider>(context).weatherData;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
           'weather app',
           style: TextStyle(
-            color: Colors.white,
-          ),
+              // color: Colors.white,
+              ),
         ),
         actions: [
           IconButton(
@@ -35,30 +38,86 @@ class WeatherApp extends StatelessWidget {
             icon: Icon(Icons.search),
           ),
         ],
-        backgroundColor: Colors.blue,
       ),
-      body: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'there is no weather 😔 start',
-                style: TextStyle(
-                  fontSize: 25,
-                ),
+      body: weatherData == null
+          ? Center(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'there is no weather 😔 start',
+                    style: TextStyle(
+                      fontSize: 25,
+                    ),
+                  ),
+                  Text(
+                    'searching now 🔍',
+                    style: TextStyle(
+                      fontSize: 25,
+                    ),
+                  ),
+                ],
               ),
-              Text(
-                'searching now 🔍',
-                style: TextStyle(
-                  fontSize: 25,
-                ),
+            )
+          : Container(
+              decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                colors: [
+                  Colors.green.shade300,
+                  Colors.green.shade100,
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              )),
+              child: Column(
+                children: [
+                  Spacer(
+                    flex: 2,
+                  ),
+                  Text(
+                    Provider.of<WeatherProvider>(context).cityName ?? '',
+                    style: TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    'updated at ${weatherData!.date.hour}:${weatherData!.date.minute}',
+                    style: TextStyle(fontSize: 22),
+                  ),
+                  Spacer(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Image.asset(weatherData!.getImage()),
+                      Text(
+                        '${Provider.of<WeatherProvider>(context).weatherData!.temp}',
+                        style: TextStyle(fontSize: 30),
+                      ),
+                      Column(
+                        children: [
+                          Text('maxTemp:${weatherData!.maxTemp.toInt()}'),
+                          Text('minTemp:${weatherData!.minTemp.toInt()}'),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Spacer(),
+                  Text(
+                    // the ? say to the compiler don't try access the weatherData when it equal to Null
+                    // weatherData?.weatherStateName ?? ''
+                    weatherData!.weatherStateName,
+                    style: TextStyle(
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Spacer(
+                    flex: 3,
+                  )
+                ],
               ),
-            ],
-          ),
-        ),
-      ),
+            ),
     );
   }
 }

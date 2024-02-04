@@ -7,12 +7,17 @@ class WeatherService {
   String apiKey = '79df5cfa03cf4041924180055242301';
 
   // function responsible to get and parse the weather data
-  Future<WeatherModel> getWeather({required cityName}) async {
-    String url =
-        '${baseUrl}forecast.json?key=$apiKey&q=$cityName&days=1&aqi=no&alerts=no';
-    http.Response response = await http.get(Uri.parse(url));
-    Map<String, dynamic> data = jsonDecode(response.body);
-    WeatherModel weather = WeatherModel.fromJson(data);
+  Future<WeatherModel?> getWeather({required cityName}) async {
+    WeatherModel? weather;
+    try {
+      String url =
+          '${baseUrl}forecast.json?key=$apiKey&q=$cityName&days=1&aqi=no&alerts=no';
+
+      http.Response response = await http.get(Uri.parse(url));
+      Map<String, dynamic> data = jsonDecode(response.body);
+      weather = WeatherModel.fromJson(data);
+      
+    } catch (e) {}
     return weather;
   }
 }
