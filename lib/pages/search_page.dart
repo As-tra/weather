@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:weather_app/models/weather_model.dart';
-import 'package:weather_app/providers/weather_prodider.dart';
-import 'package:weather_app/services/weather_service.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weather_app/cubits/weather_cubit/weather_cubit.dart';
 
 class SearchPage extends StatelessWidget {
   String? cityName;
@@ -21,13 +19,8 @@ class SearchPage extends StatelessWidget {
           child: TextField(
             onChanged: (value) => cityName = value,
             onSubmitted: (value) async {
-              WeatherService service = WeatherService();
-              WeatherModel? weather =
-                  await service.getWeather(cityName: cityName);
-              Provider.of<WeatherProvider>(context, listen: false).weatherData =
-                  weather;
-              Provider.of<WeatherProvider>(context, listen: false).cityName =
-                  cityName;
+              BlocProvider.of<WeatherCubit>(context)
+                  .getWeather(cityName: cityName!);
               Navigator.pop(context);
             },
             decoration: InputDecoration(
@@ -38,16 +31,11 @@ class SearchPage extends StatelessWidget {
                 hintText: 'Enter a city please',
                 suffixIcon: GestureDetector(
                   onTap: () async {
-                    WeatherService service = WeatherService();
-                    WeatherModel? weather =
-                        await service.getWeather(cityName: cityName);
-                    Provider.of<WeatherProvider>(context, listen: false)
-                        .weatherData = weather;
-                    Provider.of<WeatherProvider>(context, listen: false)
-                        .cityName = cityName;
+                    BlocProvider.of<WeatherCubit>(context)
+                        .getWeather(cityName: cityName!);
                     Navigator.pop(context);
                   },
-                  child: Icon(Icons.search),
+                  child: const Icon(Icons.search),
                 )),
           ),
         ),

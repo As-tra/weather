@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weather_app/cubits/weather_cubit/weather_cubit.dart';
+import 'package:weather_app/cubits/weather_cubit/weather_state.dart';
 import 'package:weather_app/pages/home_page.dart';
-import 'package:weather_app/providers/weather_prodider.dart';
+import 'package:weather_app/services/weather_service.dart';
 
 void main() {
-  runApp(ChangeNotifierProvider(
+  runApp(BlocProvider(
     child: MyApp(),
-    create: (context) => WeatherProvider(),
+    create: (context) => WeatherCubit(WeatherInitial(),WeatherService()),
   ));
 }
 
@@ -21,7 +23,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       debugShowCheckedModeBanner: false,
-      home: WeatherApp(),
+      home: HomePage(),
     );
   }
 }
